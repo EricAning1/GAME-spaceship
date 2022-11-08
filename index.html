@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Space Ship</title>
+
+    <link rel="stylesheet" href="style.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="bodyContainer">
+      <div class="mainCharacterView left">
+        <div class="nameBox">USS Assembly</div>
+        <div class="playerImage"></div>
+        <div class="playerStats">
+          Hull : 15 <br />
+          FirePower : 5 <br />
+          Accuracy : .7 <br />
+        </div>
+      </div>
+
+      <div class="game">
+        <div id="hits">******************</div>
+
+        <div id="attack">**************</div>
+
+        <div><button>START</button></div>
+      </div>
+
+      <div class="mainCharacterView right">
+        <div class="nameBox">AlienShip</div>
+        <div class="enemyImage"></div>
+        <div class="enemyStats">
+          <ul>
+            <p id="hull">Hull : 6</p>
+
+            <p id="firepower">FirePower : 3</p>
+
+            <p id="accuracy">Accuracy : .6</p>
+          </ul>
+
+          <!-- <div class="nameBox">Enemy</div>
+                    <div class="enemyImage"></div>
+                        <div class="enemyStats">
+                            Hull : 6 <br>
+                            FirePower : 3 <br>
+                            Accuracy : .6 <br> -->
+        </div>
+      </div>
+    </div>
+    <script src="app.js"></script>
+  </body>
+</html>
