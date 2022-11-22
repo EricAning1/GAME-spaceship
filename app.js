@@ -1,88 +1,140 @@
-class EarthShip {
-  constructor(name, hull, firepower, accuracy) {
-    this.name = name;
-    this.hull = hull;
-    this.firepower = firepower;
-    this.accuracy = accuracy;
-  }
-}
-const earthShip = new EarthShip('USS Assembly', 20, 5, 0.7);
+const hit = document.getElementById('hits');
+const over = document.getElementById('gameover');
+const start = document.querySelector('.start');
+start.style.marginTop = '40px';
+start.style.backgroundColor = '#ffaaa5';
+const attack = document.getElementById('attack');
+const reload = document.querySelector('.restart');
+reload.style.backgroundColor = '#6c5b7c';
+reload.style.marginTop = '40px';
 
-function randomHull(max, min) {
-  return Math.floor(Math.random() * (max - min) + min);
-}
-function randomFirepower(max, min) {
-  return Math.floor(Math.random() * (max - min) + min);
-}
-function randomAccuracy(max, min) {
-  return (Math.random() * (max - min) + min).toFixed(1);
-}
-
-class AlienShip {
+class Spaceship {
   constructor() {
-    this.name = `AlienShip`;
-    this.hull = randomHull(6, 3);
-    this.firepower = randomFirepower(4, 2);
-    this.accuracy = randomAccuracy(0.8, 0.6);
+    this.name = 'Spaceship';
+    this.hull = 20;
+    this.firepower = 5;
+    this.accuracy = 0.7;
   }
 }
-//create an array of alien ships
-let shipFleet = [];
 
-for (let i = 0; i < 6; i++) {
-  shipFleet.push(new AlienShip());
+class EarthShip extends Spaceship {
+  constructor() {
+    super();
+    this.name = 'USS Assembly';
+  }
 }
 
-//DOM manipulation
-const alienHull = document.getElementById('hull');
-alienHull.innerHTML = `Hull: ${shipFleet[0].hull}`;
+const earthShip = new EarthShip();
+console.log(earthShip);
 
-const alienFirepower = document.getElementById('firepower');
-alienFirepower.innerHTML = `Firepower: ${shipFleet[0].firepower}`;
-const alienAccuracy = document.getElementById('accuracy');
-alienAccuracy.innerHTML = `Accuracy: ${shipFleet[0].accuracy}`;
-
-const btnEl = document.querySelector('button');
-btnEl.style.cursor = 'pointer';
-btnEl.style.backgroundColor = 'grey';
-
-//Refresh game console when clicked
-const enemyStats = document.querySelector('.enemyStats');
-enemyStats.style.cursor = 'pointer';
-
-enemyStats.addEventListener('click', function () {
-  location.reload();
-});
-
-//Apply game functionalities when clicked
-console.log(btnEl.innerText);
-btnEl.addEventListener('click', function () {
-  while (earthShip.hull >= 1 && shipFleet[0].hull >= 1) {
-    if (Math.random < shipFleet[0].accuracy) {
-      earthShip.hull -= shipFleet[0].firepower;
-      document.querySelector(
-        '#hits'
-      ).innerText = `<-Alien Ship just hit you: You have ${earthShip.hull} hits left->`;
-    } else if (shipFleet[0].accuracy < Math.random()) {
-      shipFleet[0].hull -= earthShip.firepower;
-      document.querySelector(
-        '#hits'
-      ).innerText = `<-Earth Ship just hit you: You have ${shipFleet[0].hull} hits left->`;
+class AlienShip extends Spaceship {
+  constructor() {
+    super();
+    this.name = 'Aliens';
+    this.hull = this.randomHull(6, 3);
+    this.firepower = this.randomFirepower(4, 2);
+    this.accuracy = this.randomAccuracy(0.8, 0.6);
+  }
+  //create a random list of alien ships
+  alienFleet() {
+    let alienNumber = Math.ceil(Math.random() * 6);
+    let ships = [];
+    for (let i = 0; i < alienNumber; i++) {
+      ships.push(Alien);
     }
+    return ships;
   }
 
-  if (shipFleet[0].hull <= 0) {
-    document.querySelector('#attack').innerText = '👺Alien ship is destroyed👺';
+  randomHull(max, min) {
+    return Math.floor(Math.random() * (max - min) + min);
+  }
+  randomFirepower(max, min) {
+    return Math.floor(Math.random() * (max - min) + min);
+  }
+  randomAccuracy(max, min) {
+    return (Math.random() * (max - min) + min).toFixed(1);
+  }
+}
+
+const Alien = new AlienShip();
+console.log(Alien.hull);
+console.log(Alien.alienFleet());
+console.log(Alien.alienFleet()[0].hull);
+
+//rules of engagement
+
+function attackAliens() {
+  if (Alien.alienFleet()[0].hull >= 1) {
+    if (Math.random() <= earthShip.accuracy) {
+      console.log('Alienship just got hit');
+
+      Alien.alienFleet()[0].hull -= earthShip.firepower;
+      hit.textContent = `Alienship just got hit: have ${
+        Alien.alienFleet()[0].hull
+      } hits left`;
+    } else {
+      console.log('Earthship missed, prepare for an attack');
+      attack.textContent = 'Earthship missed, prepare for an attack';
+    }
+  } else if (Alien.alienFleet()[0].hull <= 0) {
+    if (
+      Alien.alienFleet().indexOf(
+        Alien.alienFleet()[0] < Alien.alienFleet().length - 1
+      )
+    ) {
+      Alien.alienFleet().shift();
+      console.log(
+        `You destroyed 1 alien ship: only ${
+          Alien.alienFleet().length - 1
+        } ships left`
+      );
+      over.textContent = `You destroyed 1 alien ship: only ${
+        Alien.alienFleet().length - 1
+      } ships left`;
+    }
+  } else {
+    console.log('All alien ships have been destroyed: Game Over');
+    over.textContent = 'All alien ships have been destroyed: Game Over';
+  }
+}
+attackAliens();
+
+function attackHumans() {
+  if (earthShip.hull >= 1) {
+    if (Math.random() <= Alien.alienFleet()[0].accuracy) {
+      earthShip.hull -= Alien.alienFleet()[0].firepower;
+      console.log(
+        `The aliens just hit you: You have ${earthShip.hull} hits left`
+      );
+
+      hit.textContent = `The aliens just hit you: You have ${earthShip.hull} hits left`;
+    } else {
+      console.log('The aliens missed: Time to attack');
+      attack.textContent = 'The aliens missed: Time to attack';
+    }
   } else if (earthShip.hull <= 0) {
-    document.querySelector('#attack').innerText = 'Earth ship is destroyed';
+    console.log('Earth ship is destroyed: Game over');
+    over.textContent = 'Earth ship is destroyed: Game over';
   }
+}
+attackHumans();
+
+start.addEventListener('click', function () {
+  attackAliens();
 });
 
-function fleetDestroyed() {
-  shipFleet.forEach((ship) => {
-    while (ship.hull <= 0) {
-      shipFleet.shift();
-    }
-  });
+start.addEventListener('click', function () {
+  return attackHumans();
+});
+
+//when game is over click on restart button to restart game
+
+function refresh() {
+  setTimeout(function () {
+    location.reload();
+  }, 100);
 }
-console.log(shipFleet);
+
+reload.addEventListener('click', function () {
+  return refresh();
+});

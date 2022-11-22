@@ -94,12 +94,12 @@ button {
 }
 #attack {
   font-size: 1em;
-  background-color: red;
+  background-color: #dc2f2f;
   margin-bottom: 9em;
   margin-top: 4emAaq;
 }
 #hits {
   font-size: 1em;
-  background-color: rgb(158, 84, 84);
+  background-color: #00bbf0;
   margin-bottom: 4em;
 }
