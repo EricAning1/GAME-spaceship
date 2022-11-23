@@ -1,9 +1,10 @@
 const hit = document.getElementById('hits');
 const over = document.getElementById('gameover');
 const shoot = document.querySelector('.shoot');
+shoot.style.marginTop = '40px';
+shoot.style.backgroundColor = '#ffaaa5';
 const start = document.querySelector('.start');
-start.style.marginTop = '40px';
-start.style.backgroundColor = '#ffaaa5';
+const container = document.querySelector('.bodyContainer');
 const attack = document.getElementById('attack');
 const reload = document.querySelector('.restart');
 reload.style.backgroundColor = '#6c5b7c';
@@ -113,25 +114,20 @@ function gameOver() {
       playing = false;
       console.log('GAME OVER');
       over.textContent = 'GAME OVER';
-    } else if (earthShip.hull === 0) {
+      container.style.backgroundColor = '#feffdf';
       playing = false;
       console.log('GAME OVER');
       over.textContent = 'GAME OVER';
+      container.style.backgroundColor = '#feffdf';
     }
   }
 }
-
+//click on the SHOOT button to begin fight
 shoot.addEventListener('click', function () {
   attackAliens();
   gameOver();
-});
-
-start.addEventListener('click', function () {
   attackHumans();
-  gameOver();
 });
-
-//when game is over click on restart button to restart game
 
 function refresh() {
   setTimeout(function () {
