@@ -1,5 +1,6 @@
 const hit = document.getElementById('hits');
 const over = document.getElementById('gameover');
+const shoot = document.querySelector('.shoot');
 const start = document.querySelector('.start');
 start.style.marginTop = '40px';
 start.style.backgroundColor = '#ffaaa5';
@@ -7,6 +8,9 @@ const attack = document.getElementById('attack');
 const reload = document.querySelector('.restart');
 reload.style.backgroundColor = '#6c5b7c';
 reload.style.marginTop = '40px';
+
+let playing = true;
+let ships = [];
 
 class Spaceship {
   constructor() {
@@ -35,15 +39,7 @@ class AlienShip extends Spaceship {
     this.firepower = this.randomFirepower(4, 2);
     this.accuracy = this.randomAccuracy(0.8, 0.6);
   }
-  //create a random list of alien ships
-  alienFleet() {
-    let alienNumber = Math.ceil(Math.random() * 6);
-    let ships = [];
-    for (let i = 0; i < alienNumber; i++) {
-      ships.push(Alien);
-    }
-    return ships;
-  }
+  //create a fleet of  alien ships
 
   randomHull(max, min) {
     return Math.floor(Math.random() * (max - min) + min);
@@ -56,75 +52,83 @@ class AlienShip extends Spaceship {
   }
 }
 
-const Alien = new AlienShip();
-console.log(Alien.hull);
-console.log(Alien.alienFleet());
-console.log(Alien.alienFleet()[0].hull);
+for (let i = 0; i < 6; i++) {
+  const Alien = new AlienShip();
+  ships.push(Alien);
+}
 
-//rules of engagement
+console.log(ships);
+console.log(ships[0].hull);
 
 function attackAliens() {
-  if (Alien.alienFleet()[0].hull >= 1) {
-    if (Math.random() <= earthShip.accuracy) {
-      console.log('Alienship just got hit');
+  if (playing) {
+    for (let i = 0; i < ships.length; i++) {
+      if (ships[i].hull >= 1) {
+        if (Math.random() <= earthShip.accuracy) {
+          console.log('Alienship just got hit');
 
-      Alien.alienFleet()[0].hull -= earthShip.firepower;
-      hit.textContent = `Alienship just got hit: have ${
-        Alien.alienFleet()[0].hull
-      } hits left`;
-    } else {
-      console.log('Earthship missed, prepare for an attack');
-      attack.textContent = 'Earthship missed, prepare for an attack';
+          ships[i].hull -= earthShip.firepower;
+          hit.textContent = `Alienship just got hit: have ${ships[i].hull} hits left`;
+        } else {
+          console.log('Earth ship missed, prepare for an attack');
+          attack.textContent = 'Earth ship missed, prepare for an attack';
+        }
+      } else if (ships[i].hull <= 0) {
+        ships.shift();
+        console.log(
+          `You destroyed another alien ship: only ${ships.length} ships left`
+        );
+        over.textContent = `You destroyed another alien ship: only ${ships.length} ships left`;
+      }
     }
-  } else if (Alien.alienFleet()[0].hull <= 0) {
-    if (
-      Alien.alienFleet().indexOf(
-        Alien.alienFleet()[0] < Alien.alienFleet().length - 1
-      )
-    ) {
-      Alien.alienFleet().shift();
-      console.log(
-        `You destroyed 1 alien ship: only ${
-          Alien.alienFleet().length - 1
-        } ships left`
-      );
-      over.textContent = `You destroyed 1 alien ship: only ${
-        Alien.alienFleet().length - 1
-      } ships left`;
-    }
-  } else {
-    console.log('All alien ships have been destroyed: Game Over');
-    over.textContent = 'All alien ships have been destroyed: Game Over';
   }
 }
 attackAliens();
 
 function attackHumans() {
-  if (earthShip.hull >= 1) {
-    if (Math.random() <= Alien.alienFleet()[0].accuracy) {
-      earthShip.hull -= Alien.alienFleet()[0].firepower;
-      console.log(
-        `The aliens just hit you: You have ${earthShip.hull} hits left`
-      );
+  if (playing) {
+    if (earthShip.hull >= 1) {
+      if (Math.random() <= ships[0].accuracy) {
+        earthShip.hull -= ships[0].firepower;
+        console.log(
+          `The aliens just hit you: You have ${earthShip.hull} hits left`
+        );
 
-      hit.textContent = `The aliens just hit you: You have ${earthShip.hull} hits left`;
-    } else {
-      console.log('The aliens missed: Time to attack');
-      attack.textContent = 'The aliens missed: Time to attack';
+        hit.textContent = `The aliens just hit you: You have ${earthShip.hull} hits left`;
+      } else {
+        console.log('The aliens missed: Time to attack');
+        attack.textContent = 'The aliens missed: Time to attack';
+      }
+    } else if (earthShip.hull <= 0) {
+      console.log('Earth ship is destroyed: Game over');
+      over.textContent = 'Earth ship is destroyed: Game over';
     }
-  } else if (earthShip.hull <= 0) {
-    console.log('Earth ship is destroyed: Game over');
-    over.textContent = 'Earth ship is destroyed: Game over';
   }
 }
 attackHumans();
 
-start.addEventListener('click', function () {
+function gameOver() {
+  if (playing) {
+    if (ships.length === 0) {
+      playing = false;
+      console.log('GAME OVER');
+      over.textContent = 'GAME OVER';
+    } else if (earthShip.hull === 0) {
+      playing = false;
+      console.log('GAME OVER');
+      over.textContent = 'GAME OVER';
+    }
+  }
+}
+
+shoot.addEventListener('click', function () {
   attackAliens();
+  gameOver();
 });
 
 start.addEventListener('click', function () {
-  return attackHumans();
+  attackHumans();
+  gameOver();
 });
 
 //when game is over click on restart button to restart game
