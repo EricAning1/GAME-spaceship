@@ -111,12 +111,14 @@ function gameOver() {
       container.style.backgroundColor = '#feffdf';
       playing = false;
       attack.textContent = 'YOU WIN!';
+      hit.textContent = '**************';
     } else if (earthShip.hull <= 0) {
       console.log('GAME OVER');
       over.textContent = 'GAME OVER';
       container.style.backgroundColor = '#feffdf';
       playing = false;
       attack.textContent = 'ALIENS WIN!';
+      hit.textContent = '**************';
     }
   }
 }
@@ -134,5 +136,5 @@ function refresh() {
 }
 
 reload.addEventListener('click', function () {
-  return refresh();
+  refresh();
 });
