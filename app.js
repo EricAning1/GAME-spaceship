@@ -3,7 +3,6 @@ const over = document.getElementById('gameover');
 const shoot = document.querySelector('.shoot');
 shoot.style.marginTop = '40px';
 shoot.style.backgroundColor = '#ffaaa5';
-const start = document.querySelector('.start');
 const container = document.querySelector('.bodyContainer');
 const attack = document.getElementById('attack');
 const reload = document.querySelector('.restart');
@@ -67,12 +66,11 @@ function attackAliens() {
       if (ships[i].hull >= 1) {
         if (Math.random() <= earthShip.accuracy) {
           console.log('Alienship just got hit');
-
           ships[i].hull -= earthShip.firepower;
           hit.textContent = `Alienship just got hit: have ${ships[i].hull} hits left`;
         } else {
-          console.log('Earth ship missed, prepare for an attack');
-          attack.textContent = 'Earth ship missed, prepare for an attack';
+          console.log('You missed, prepare for an attack');
+          attack.textContent = 'You missed, prepare for an attack';
         }
       } else if (ships[i].hull <= 0) {
         ships.shift();
@@ -100,9 +98,6 @@ function attackHumans() {
         console.log('The aliens missed: Time to attack');
         attack.textContent = 'The aliens missed: Time to attack';
       }
-    } else if (earthShip.hull <= 0) {
-      console.log('Earth ship is destroyed: Game over');
-      over.textContent = 'Earth ship is destroyed: Game over';
     }
   }
 }
@@ -111,14 +106,17 @@ attackHumans();
 function gameOver() {
   if (playing) {
     if (ships.length === 0) {
-      playing = false;
       console.log('GAME OVER');
       over.textContent = 'GAME OVER';
       container.style.backgroundColor = '#feffdf';
       playing = false;
+      attack.textContent = 'YOU WIN!';
+    } else if (earthShip.hull <= 0) {
       console.log('GAME OVER');
       over.textContent = 'GAME OVER';
       container.style.backgroundColor = '#feffdf';
+      playing = false;
+      attack.textContent = 'ALIENS WIN!';
     }
   }
 }
